@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SpartaMC | Accueil</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="style.css">
+
+  <!-- FAVICON PRO -->
+  <link rel="icon" type="image/x-icon" href="favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <link rel="manifest" href="site.webmanifest">
+</head>
+
+<body class="loading">
+
+<!-- LOADER -->
+<div id="loader">
+  <div class="loader-ring"></div>
+  <p>Loading SpartaMC...</p>
+</div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+  <a href="/" class="logo">
+  <img src="android-chrome-512x512.png" class="logo-img" alt="SpartaMC Logo">
+  <span class="logo-text">SpartaMC</span>
+
+  <span
+    class="status-dot loading"
+    id="serverDot"
+    data-tooltip="Checking server status">
+  </span>
+  </a>
+
+
+  <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+  <ul class="menu">
+    <li><a href="index.html" class="active">🏠 Accueil</a></li>
+
+    <li class="dropdown">
+      <a href="#">📜 Rules</a>
+      <ul class="dropdown-menu">
+        <li><a href="rules.html">📘 General Rules</a></li>
+        <li><a href="rules-pvp.html">⚔️ PvP Rules</a></li>
+      </ul>
+    </li>
+
+    <li>
+      <a href="https://discord.gg/ZWekCRHBXp" target="_blank" class="nav-discord">
+        <img src="discord.png" class="discord-img" alt="Discord">
+        <span>Discord</span>
+      </a>
+    </li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero hero-gif reveal">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1>Moroccan Minecraft Server</h1>
+    <p>Fair play • Strong community • No cheats</p>
+
+    <div class="hero-actions">
+      <button id="copyIp">📋 Copy IP</button>
+    </div>
+
+    <p class="ip">IP: <strong>SpartaMC.ma</strong></p>
+
+  
+  </div>
+</section>
+
+<!-- SERVER INFO -->
+<section class="server-info reveal">
+  <div class="info-card reveal">
+    <span class="icon">👥</span>
+    <h3>Players</h3>
+    <p><span id="players">0</span> Online</p>
+  </div>
+
+  <div class="info-card">
+    <span class="icon">🧩</span>
+    <h3>Version</h3>
+    <p>1.7.2 – 1.21.11</p>
+  </div>
+
+  <div class="info-card">
+    <span class="icon">🎮</span>
+    <h3>Modes</h3>
+    <p>Survival · Party · Parkour</p>
+  </div>
+</section>
+
+<!-- SPARTAN CTA -->
+<section class="spartan-cta reveal">
+  <div class="spartan-text">
+    <h2>Join SpartaMC Server</h2>
+    <p>Play now and join the SpartaMC community</p>
+
+    <a href="https://discord.gg/ZWekCRHBXp" class="btn">
+      Join Discord
+    </a>
+  </div>
+<!-- REPORT CENTER -->
+<section class="report-center reveal">
+  <div class="report-title join-style">
+    <h2>Report Bug or Player</h2>
+    <span class="title-line"></span>
+    <p>Help us keep SpartaMC fair and clean by reporting issues or rule breakers.</p>
+  </div>
+
+  <a href="report.html" class="report-btn">🚨 Report Bug or Player</a>
+</section>
+
+  <img src="Jh3ptwwcfN.jpg" alt="SpartaMC Spartan">
+</section>
+
+<footer>© SpartaMC — IP: SpartaMC.ma — Morocco 🇲🇦</footer>
+
+<!-- TOAST -->
+<div id="copyToast">
+  <span class="check">✔</span>
+  IP Copied
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

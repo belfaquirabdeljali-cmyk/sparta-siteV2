@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SpartaMC | Report</title>
+
+  <!-- ستايلات ديالك -->
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="report.css">
+</head>
+
+<body>
+
+  <!-- NAVBAR (اختياري: إذا عندك فـstyle.css) -->
+  <nav class="navbar">
+    <a href="/" class="logo">
+  <img src="android-chrome-512x512.png" class="logo-img" alt="SpartaMC Logo">
+  <span class="logo-text">SpartaMC</span>
+
+  <span
+    class="status-dot loading"
+    id="serverDot"
+    data-tooltip="Checking server status">
+  </span>
+  </a>
+
+    <button class="burger" id="burger" aria-label="Open menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
+    <ul class="menu">
+      <li><a href="index.html">🏠 Accueil</a></li>
+      <li>
+        <a href="https://discord.gg/ZWekCRHBXp" target="_blank" class="nav-discord">
+          <img src="discord.png" class="discord-img" alt="Discord">
+          <span>Discord</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+  <main class="report-page">
+    <header class="report-head">
+      <h1>🛑 Report</h1>
+      <p>3mr l form w siffet report l staff. Screenshot optional.</p>
+    </header>
+
+    <section class="report-card">
+      <form id="reportForm" class="report-form">
+
+        <div class="grid-2">
+          <div class="field">
+            <label>Minecraft Username</label>
+            <input type="text" name="user" placeholder="Example: Player123" required>
+            <small class="hint">Dkhl smiya dyalk f server.</small>
+          </div>
+
+          <div class="field">
+            <label>Type</label>
+            <select id="type" name="type" required>
+              <option value="" selected disabled>Select…</option>
+              <option value="Player">Player</option>
+              <option value="Bug">Bug</option>
+            </select>
+            <small class="hint">Chno no3 report?</small>
+          </div>
+        </div>
+
+        <div class="field player-field" id="playerField">
+          <label>Reported Player (optional)</label>
+          <input type="text" name="reported_player" placeholder="Example: BadGuy">
+          <small class="hint">Ila katreporti chi player, 7ett smito.</small>
+        </div>
+
+        <div class="field">
+          <label>Reason / Details</label>
+          <textarea name="reason" placeholder="Cheating / Insults / Grief... + details" required></textarea>
+        </div>
+
+        <div class="field">
+          <label>Screenshot (optional)</label>
+
+          <input class="file-input" id="ss" type="file" name="screenshot" accept="image/*">
+
+          <label class="file-ui" for="ss">
+            <span class="file-btn">Choose file</span>
+            <span class="file-name" id="fileName">No file selected</span>
+          </label>
+
+          <small class="hint">Optional (max 5MB). png/jpg/webp</small>
+        </div>
+
+        <!-- Honeypot (bot trap) -->
+        <input type="text" name="website" class="hp" tabindex="-1" autocomplete="off">
+
+        <!-- Turnstile -->
+        <div class="cf-turnstile" data-sitekey="0x4AAAAAACLwEOuJCg9ycJ-i"></div>
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+
+        <button class="btn-report" type="submit">Send Report</button>
+      </form>
+    </section>
+  </main>
+
+  <!-- ✅ A0 Center Message Overlay -->
+  <div class="msg-overlay" id="msgOverlay" aria-hidden="true">
+    <div class="msg-card info" id="msgCard" role="dialog" aria-live="polite" aria-modal="true">
+      <div class="msg-title">
+        <strong id="msgHeading">Notification</strong>
+        <button type="button" class="msg-close" id="msgClose">Close</button>
+      </div>
+      <p class="msg-text" id="msg"></p>
+    </div>
+  </div>
+
+  <script>
+    const ENDPOINT = "https://spartamc.ma/report";
+
+    const form = document.getElementById("reportForm");
+    const type = document.getElementById("type");
+    const playerField = document.getElementById("playerField");
+
+    // file name preview
+    const fileInput = document.getElementById("ss");
+    const fileName  = document.getElementById("fileName");
+
+    // ✅ overlay elements
+    const msgOverlay = document.getElementById("msgOverlay");
+    const msgCard    = document.getElementById("msgCard");
+    const msgClose   = document.getElementById("msgClose");
+    const msgHeading = document.getElementById("msgHeading");
+    const msg        = document.getElementById("msg");
+
+    let msgTimer = null;
+
+    function showMsg(text, kind = "info", heading = "Notification", autoHideMs = 2200){
+      msg.textContent = text;
+      msgHeading.textContent = heading;
+
+      msgCard.classList.remove("success","error","info");
+      msgCard.classList.add(kind);
+
+      msgOverlay.classList.add("show");
+      msgOverlay.setAttribute("aria-hidden", "false");
+
+      clearTimeout(msgTimer);
+      if (autoHideMs > 0) msgTimer = setTimeout(hideMsg, autoHideMs);
+    }
+
+    function hideMsg(){
+      msgOverlay.classList.remove("show");
+      msgOverlay.setAttribute("aria-hidden", "true");
+    }
+
+    msgClose.addEventListener("click", hideMsg);
+    msgOverlay.addEventListener("click", (e) => {
+      if (e.target === msgOverlay) hideMsg();
+    });
+    window.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") hideMsg();
+    });
+
+    // show/hide player field
+    type.addEventListener("change", () => {
+      if (type.value === "Player") playerField.classList.add("show");
+      else playerField.classList.remove("show");
+    });
+
+    fileInput.addEventListener("change", () => {
+      fileName.textContent = fileInput.files?.[0]?.name || "No file selected";
+    });
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      showMsg("Sending...", "info", "Please wait", 0);
+
+      const data = new FormData(form);
+
+      // IMPORTANT: send Turnstile token
+      const tsToken = document.querySelector('[name="cf-turnstile-response"]')?.value || "";
+      data.set("cf-turnstile-response", tsToken);
+
+      try {
+        const r = await fetch(ENDPOINT, { method: "POST", body: data });
+        const text = await r.text().catch(() => "");
+
+        if (!r.ok) {
+          showMsg("❌ " + (text || "Request failed"), "error", "Error", 3000);
+          return;
+        }
+
+        showMsg("✅ Report sent! Thank you.", "success", "Success", 2200);
+
+        form.reset();
+        fileName.textContent = "No file selected";
+        playerField.classList.remove("show");
+
+        // reset turnstile widget (optional)
+        if (window.turnstile) {
+          const w = document.querySelector(".cf-turnstile");
+          if (w) window.turnstile.reset(w);
+        }
+      } catch (err) {
+        showMsg("❌ Network error. Try again.", "error", "Network", 3000);
+      }
+    });
+  </script>
+  
+  <script src="app.js"></script>
+</body>
+</html>
